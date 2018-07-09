@@ -65,14 +65,19 @@ def set_cmd_arg(cfg: Config, cmd, opt) -> Config:
 def set_cmd_opt(cfg: Config, *cmds, **opts) -> Config:
     """ Set command options. """
     if len(cmds) == 1:
-        idx = [cmd for cmd in cmdidx(cfg, cmds[0])][0]
-        _opts = {**cfg[idx][-1], **opts}
-        cmd = (cmds[0], _opts)
+        idxs = [idx for idx in cmdidx(cfg, cmds[0])]
+        for idx in idxs:
+            opts = {**cfg[idx][-1], **opts}
+            cmd = (cmds[0], opts)
+            cfg = cfg[:idx] + (cmd,) + cfg[idx+1:]
     elif len(cmds) == 2:
-        idx = [cmd for cmd in cmdidx(cfg, cmds[0]) if cfg[cmd][1] == cmds[1]][0]
-        _opts = {**cfg[idx][-1], **opts}
-        cmd = (cmds[0], cmds[1], _opts)
-    return Config(cfg[:idx] + (cmd,) + cfg[idx+1:])
+        idxs = [idx for idx in cmdidx(cfg, cmds[0]) if cfg[idx][1] == cmds[1]]
+        for idx in idxs:
+            opts = {**cfg[idx][-1], **opts}
+            cmd = (cmds[0], cmds[1], opts)
+            cfg = cfg[:idx] + (cmd,) + cfg[idx+1:]
+    
+    return Config(cfg)
 
 
 # def set_pair_potential_opt(cfg: Config, potential: str, **opts) -> Config:
