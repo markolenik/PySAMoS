@@ -63,7 +63,6 @@ def connect_points(points: sp.ndarray) -> sp.ndarray:
     return sp.array(con)
 
 
-
 def vor_vertices(tri_points: sp.ndarray) -> sp.ndarray:
     """ Compute vertices of Voronoi diagram for given triangulation. """
     vor = sp.spatial.Voronoi(tri_points)
@@ -82,3 +81,48 @@ def poly_area(vs: sp.ndarray) -> sp.ndarray:
 def poly_perimeter(vs: sp.ndarray) -> sp.ndarray:
     """ Compute polygon perimeter. """
     return shapely.geometry.Polygon(vs).length
+
+
+def poly_shape_tensor(vs: sp.ndarray) -> sp.ndarray:
+    """ Shape tensor of polygon. """
+    try:
+        rc = sp.mean(vs, axis=0)    # Center of mass.
+        tensor = 0
+        for v in vs:
+            rbar = v-rc
+            tensor += sp.array([[rbar[0]**2, -rbar[0]*rbar[1]],
+                                [-rbar[0]*rbar[1], rbar[1]**2]])
+        return tensor
+    except:
+        return None
+
+
+def poly_shape_factor(vs: sp.ndarray) -> float:
+    """ Shape factor from shape tensor. """
+    tensor = poly_shape_tensor(vs)
+    _w, _ = sp.linalg.eig(tensor)
+    w = sp.real(_w)
+    return abs((w[0]-w[1])/(w[0]+w[1]))
+
+
+def circle_points(N, R, R_sigma=0, theta_sigma=0):
+    """ Generate points on circle using Vogels method (sunflower seeds)."""
+    radius = sp.sqrt(sp.arange(N)*pow(R, 2) / float(N))
+    radius = radius + sp.randn(len(radius))*R_sigma
+
+    golden_angle = sp.pi * (3 - sp.sqrt(5))
+    theta = golden_angle * sp.arange(N)
+    theta = theta + sp.randn(len(theta))*theta_sigma
+
+    points = sp.zeros((N, 2))
+    points[:,0] = sp.cos(theta)
+    points[:,1] = sp.sin(theta)
+    points *= radius.reshape((N, 1))
+    return points
+
+
+def circle_boundpoints(N, R):
+    """ Return uniform circular boundary."""
+    phis = sp.linspace(0, 2*sp.pi, N)[:-1] # Don't close the circle!
+    z = R*sp.exp(1j*phis)
+    return sp.vstack((sp.real(z), sp.imag(z))).T
