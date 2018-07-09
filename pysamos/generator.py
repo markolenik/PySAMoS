@@ -1,6 +1,5 @@
 from typing import Tuple, Union, NewType, List, Sequence
 import typing
-import numbers
 
 from . import parser
 from . import lexer

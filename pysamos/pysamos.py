@@ -3,9 +3,6 @@ import subprocess
 
 
         
-# TODO def read_tissue
-
-
 def run(cfgfile: str, silent: bool = False, debug: bool = False):
     """ Run a SAMoS simulation from config file. 
 
