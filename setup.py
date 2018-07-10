@@ -17,7 +17,7 @@ setuptools.setup(
     description="A wrapper around the active matter simulator SAMoS",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://gitlab.com/mark_olenik/PySAMoS",
+    url="https://gitlab.com/molenik/PySAMoS",
     packages=setuptools.find_packages(),
     install_requires=dependencies,
     classifiers=(
