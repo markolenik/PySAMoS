@@ -157,3 +157,17 @@ t_ignore = ' \t'
 t_ignore_COMMENT = r'\#.*'
 
 lexer = ply.lex.lex()
+
+
+def lex_file(fname: str) -> list:
+    """Lex configuration file into tokens."""
+    with open(fname, 'r') as f:
+        lexer.input(f.read())
+        # Tokenize.
+        tokens = []
+        while True:
+            tok = lexer.token()
+            if not tok:
+                break
+            tokens.append(tok)
+    return tokens
