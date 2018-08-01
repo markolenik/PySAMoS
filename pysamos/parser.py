@@ -37,7 +37,8 @@ def p_program_error(p):
 
 # Format of all XPP statements.
 def p_statement(p):
-    """ statement : command NEWLINE """
+    """ statement : command
+                  | command NEWLINE """
     p[0] = p[1]
 
 # Blank line.
@@ -189,12 +190,12 @@ def p_error(p):
 
 
 def parse(data: str) -> Parsed:
-    """ Parse data. """
+    """Parse data. """
     parser = ply.yacc.yacc(debug=True)
     return parser.parse(data)
 
 
 def parse_file(fname: str) -> Parsed:
-    """ Parse configuration file."""
+    """Parse configuration file."""
     with open(fname, 'r') as f:
         return parse(f.read())
