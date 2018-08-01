@@ -72,7 +72,7 @@ def clear(directory: str):
             os.remove(f)
     
 
-def result(directory: str):
+def result(directory: str) -> str:
     """ Return result data file of last simulation step. """
     dats = glob.glob(os.path.join(directory, '*[0-9].dat'))
     steps = [int(dat.split('_')[-1].split('.')[0]) for dat in dats]
