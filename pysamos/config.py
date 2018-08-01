@@ -43,6 +43,11 @@ class Config(tuple):
         values = [dict(self[idx][2]) for idx in idxs]
         return dict((key, val) for key, val in zip(keys, values))
 
+    @property
+    def P0(self):
+        vp = self.pair_potential['vp']
+        return -vp['lambda']/vp['gamma']
+
 
 
 def cmdidx(cfg: Config, cmd_name: str) -> sp.ndarray:
