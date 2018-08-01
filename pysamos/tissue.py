@@ -212,7 +212,8 @@ def write_bound_connectivity(tissue: Tissue, fname: str) -> None:
 def add_shapeinfo(tissue: Tissue) -> Tissue:
     """ Add columns with cell shape info, such as vertices of dual, area, perimeter etc. """
     vs = helpers.vor_vertices(tissue.points)
-    A = [helpers.poly_area(poly) for poly in vs]      # Area.
-    P = [helpers.poly_perimeter(poly) for poly in vs] # Perimeter.
-    p0 = [P0/sp.sqrt(A0) for A0, P0 in zip(A, P)]     # Shape factor (Bi2016).
-    return tissue.assign(vs=vs, A=A, P=P, p0=p0)
+    A = [helpers.poly_area(poly) for poly in vs]         # Area.
+    P = [helpers.poly_perimeter(poly) for poly in vs]    # Perimeter.
+    p0 = [P0/sp.sqrt(A0) for A0, P0 in zip(A, P)]        # Shape factor (Bi2016).
+    rho = [helpers.poly_shape_factor(poly) for poly in vs] # Shape factor from tensor.
+    return tissue.assign(vs=vs, A=A, P=P, p0=p0, rho=rho)
